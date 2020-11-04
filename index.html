@@ -2,7 +2,7 @@
 <html lang="ja">
   <head>
     <meta charset="utf-8">
-    <title>原神 経験値モラ計算機α</title>
+    <title>原神 経験値モラ計算機β</title>
     
     <!-- Bootstrap Default -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -12,21 +12,52 @@
     <!-- Bootstrap Default -->
     
     <script src="calc.js"></script>
+    <link rel="stylesheet" href="style.css">
+    
   </head>
   <body>
-    <div class="container container-fluid">
+    <div class="container container-fluid" style="background-color:#ece5d8">
 
-      <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-          <a href="#" class="navbar-brand">原神 経験値モラ計算機α</a>
+      <nav class="navbar navbar-expand-sm navbar-dark" style="background-color:#485164">
+          <a href="#" class="navbar-brand">原神 経験値モラ計算機β</a>
       </nav>
       <main role="main" class="container">
         <div class="form-group">
-          <label>現在Level　<input type="number" min="1" max="80" class="form-control" id="input_org" value=""></label>
-          <label>目標Level<input type="number" min="1" max="80" class="form-control" id="input_nxt" value=""></label>
+          <label>【現在Level】<input type="number" min="1" max="80" class="form-control" id="input_org" value=""></label>
+          <label>【目標Level】<input type="number" min="1" max="80" class="form-control" id="input_nxt" value=""></label>
+          <label>【現在Lv突破：済】<select id="input_break_org" class="form-control"><option value="0">なし</option><option value="1">あり</option></select></label>
+          <label>【目標Lv突破：要】<select id="input_break_nxt" class="form-control"><option value="0">なし</option><option value="1">あり</option></select></label>
+          <label>【キャラ】
+            <select id="input_chara" class="form-control">
+              <option value="X">なし</option>
+              <option value="0">アンバー</option>
+              <option value="1">バーバラ</option>
+              <option value="2">北斗</option>
+              <option value="3">ベネット</option>
+              <option value="4">重雲</option>
+              <option value="5">ディルック</option>
+              <option value="6">フィッシュル</option>
+              <option value="7">ジン</option>
+              <option value="8">ガイア</option>
+              <option value="9">刻星</option>
+              <option value="10">クレー</option>
+              <option value="11">リサ</option>
+              <option value="12">モナ</option>
+              <option value="13">凝光</option>
+              <option value="14">ノエル</option>
+              <option value="15">七七</option>
+              <option value="16">レザー</option>
+              <option value="17">スクロース</option>
+              <option value="18">主人公</option>
+              <option value="19">ウェンティ</option>
+              <option value="20">香菱</option>
+              <option value="21">行秋</option>
+            </select>
+          </label>
           <button type="button" class="btn btn-primary" onclick="OnButtonClick();">計算</button>
         </div>
 
-        <table id = "result_table" class="table table-striped table-bordered m-1">
+        <table id = "result_table" class="table table-bordered m-1">
           <thead>
             <tr>
               <th>経験値(大英雄★4)</th>
@@ -37,13 +68,33 @@
           </thead>
           <tbody>
             <tr>
-              <td> </td>
-              <td> </td>
-              <td> </td>
-              <td> </td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
             </tr>
           </tbody>
         </table>
+        
+        <table id = "result_table2" class="table table-bordered m-1">
+          <thead>
+            <tr>
+              <th>特産品</th>
+              <th>通常素材(★1)</th>
+              <th>通常素材(★2)</th>
+              <th>通常素材(★3)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+            </tr>
+          </tbody>
+        </table>
+        
         <div>
           <div>※経験値テーブル不明なため、80Lvまでしか対応していません。</div>
           <div><a href="https://twitter.com/waifu_dog">Twitter@waifu_dog</a></div>
