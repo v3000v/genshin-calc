@@ -116,9 +116,12 @@ function OnButtonClick() {
   if(org == 0)org = 1;
   if(nxt == 0)nxt = 1;
 
+  let result_table  = document.getElementById("result_table");
+  let result_table2 = document.getElementById("result_table2");
+  let result_table3 = document.getElementById("result_table3");
+
   if(org > 0 && org <= exp_table.length && nxt > 0 && nxt <= exp_table.length && org <= nxt){
     // 経験値・モラ
-    let result_table = document.getElementById("result_table");
     let result_exp = exp_table[nxt-1][0] - exp_table[org-1][0];
     let result_mor = exp_table[nxt-1][1] - exp_table[org-1][1];
     if(brk_nxt==1){
@@ -137,14 +140,14 @@ function OnButtonClick() {
       if(org==70)result_mor-=100000;
       if(org==80)result_mor-=120000;
     }
+    
     result_table.rows[1].cells[0].firstChild.data = Math.ceil(result_exp / 20000); // 星4経験値本：必要数
     result_table.rows[1].cells[1].firstChild.data = Math.ceil(result_exp /  5000); // 星3経験値本：必要数
     result_table.rows[1].cells[2].firstChild.data = Math.ceil(result_exp /  1000); // 星2経験値本：必要数
     result_table.rows[1].cells[3].firstChild.data = result_mor.toLocaleString('ja-JP'); // 必要モラ
     
     // 素材
-    let result_table2 = document.getElementById("result_table2");
-    let mat = [[0,0],[0,0],[0,0],[0,0]]; // 特産, 星1, 星2, 星3素材 * org nxt
+    let mat = [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]; // (0:特産, 1:魔物星1, 2:魔物星2, 3:魔物星3, 4:精鋭, 5:属性星2, 6:属性星3, 7:属性星4, 8:属性星5) x org nxt
     let chara = document.getElementById("input_chara").selectedIndex;
     for (let i = 0; i < 2; i++) {
       let tgt_lv = (i==0 ? org + brk_org : nxt + brk_nxt);
@@ -152,36 +155,63 @@ function OnButtonClick() {
       if(tgt_lv > 20){
         mat[0][i] += 3;
         mat[1][i] += 3;
+        mat[5][i] += 1;
       }
       if(tgt_lv > 40){
         mat[0][i] += 10;
         mat[1][i] += 15;
+        mat[4][i] += 2;
+        mat[6][i] += 3;
       }
       if(tgt_lv > 50){
         mat[0][i] += 20;
         mat[2][i] += 12;
+        mat[4][i] += 4;
+        mat[6][i] += 6;
       }
       if(tgt_lv > 60){
         mat[0][i] += 30;
         mat[2][i] += 18;
+        mat[4][i] += 8;
+        mat[7][i] += 3;
       }
       if(tgt_lv > 70){
         mat[0][i] += 45;
         mat[3][i] += 12;
+        mat[4][i] += 12;
+        mat[7][i] += 6;
       }
       if(tgt_lv > 80){
         mat[0][i] += 60;
         mat[3][i] += 24;
+        mat[4][i] += 20;
+        mat[8][i] += 6;
       }
     }
     for (let i = 0; i < 4; i++) {
       result_table2.rows[0].cells[i].firstChild.data = chara_mat[chara][i+2];
       result_table2.rows[1].cells[i].firstChild.data = mat[i][1] - mat[i][0];
     }
+    
+    for (let i = 0; i < 5; i++) {
+      if(i==0 && chara_mat[chara][1]=="主")
+        result_table3.rows[1].cells[i].firstChild.data = 0;
+      else
+        result_table3.rows[1].cells[i].firstChild.data = mat[i+4][1] - mat[i+4][0];
+    }
   }else{
-    result_table.rows[1].cells[0].firstChild.data = "エラー";
-    result_table.rows[1].cells[1].firstChild.data = "エラー";
-    result_table.rows[1].cells[2].firstChild.data = "エラー";
-    result_table.rows[1].cells[3].firstChild.data = "エラー";
+    result_table.rows[1].cells[0].firstChild.data  = "エラー";
+    result_table.rows[1].cells[1].firstChild.data  = "エラー";
+    result_table.rows[1].cells[2].firstChild.data  = "エラー";
+    result_table.rows[1].cells[3].firstChild.data  = "エラー";
+    result_table2.rows[1].cells[0].firstChild.data = "エラー";
+    result_table2.rows[1].cells[1].firstChild.data = "エラー";
+    result_table2.rows[1].cells[2].firstChild.data = "エラー";
+    result_table2.rows[1].cells[3].firstChild.data = "エラー";
+    result_table3.rows[1].cells[0].firstChild.data = "エラー";
+    result_table3.rows[1].cells[1].firstChild.data = "エラー";
+    result_table3.rows[1].cells[2].firstChild.data = "エラー";
+    result_table3.rows[1].cells[3].firstChild.data = "エラー";
+    result_table3.rows[1].cells[4].firstChild.data = "エラー";
   }
 }
