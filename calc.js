@@ -83,7 +83,8 @@ function OnButtonClick() {
   ,[4939525,1287905]
   ];
 
-  const chara_mat = [
+  // キャラクター個別情報
+  const chara_info = [
    ["","","特産品","通常素材(★1)","通常素材(★2)","通常素材(★3)"]
   ,["アンバー","炎","イグサ","牢固な矢先","鋭利な矢先","歴戦の矢先"]
   ,["バーバラ","水","慕風のマッシュルーム","占いの絵巻","封魔の絵巻","禁呪の絵巻"]
@@ -109,18 +110,23 @@ function OnButtonClick() {
   ,["行秋","水","霓裳花","破損した仮面","汚れた仮面","不吉な仮面"]
   ];
 
+  // 入力内容取得
   let org = Number(document.getElementById("input_org").value); // 現在Lv
   let nxt = Number(document.getElementById("input_nxt").value); // 目標Lv
   let brk_org = Number(document.getElementById("input_break_org").value); // 現在Lv突破 0:なし 1:あり
   let brk_nxt = Number(document.getElementById("input_break_nxt").value); // 目標Lv突破 0:なし 1:あり
-  if(org == 0)org = 1;
-  if(nxt == 0)nxt = 1;
+  let chara = document.getElementById("input_chara").selectedIndex;       // キャラ選択(index)
+  
+  let result_tables = [document.getElementById("result_table")
+                      ,document.getElementById("result_table2")
+                      ,document.getElementById("result_table3")];
 
-  let result_table  = document.getElementById("result_table");
-  let result_table2 = document.getElementById("result_table2");
-  let result_table3 = document.getElementById("result_table3");
 
+  // 計算処理開始
   if(org > 0 && org <= exp_table.length && nxt > 0 && nxt <= exp_table.length && org <= nxt){
+    // エラーメッセージクリア
+    document.getElementById("result_message").innerHTML = "<div id=\"result_message\"></div>";
+
     // 経験値・モラ
     let result_exp = exp_table[nxt-1][0] - exp_table[org-1][0];
     let result_mor = exp_table[nxt-1][1] - exp_table[org-1][1];
@@ -140,78 +146,64 @@ function OnButtonClick() {
       if(org==70)result_mor-=100000;
       if(org==80)result_mor-=120000;
     }
-    
-    result_table.rows[1].cells[0].firstChild.data = Math.ceil(result_exp / 20000); // 星4経験値本：必要数
-    result_table.rows[1].cells[1].firstChild.data = Math.ceil(result_exp /  5000); // 星3経験値本：必要数
-    result_table.rows[1].cells[2].firstChild.data = Math.ceil(result_exp /  1000); // 星2経験値本：必要数
-    result_table.rows[1].cells[3].firstChild.data = result_mor.toLocaleString('ja-JP'); // 必要モラ
-    
-    // 素材
-    let mat = [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]; // (0:特産, 1:魔物星1, 2:魔物星2, 3:魔物星3, 4:精鋭, 5:属性星2, 6:属性星3, 7:属性星4, 8:属性星5) x org nxt
-    let chara = document.getElementById("input_chara").selectedIndex;
+
+    result_tables[0].rows[1].cells[0].firstChild.data = Math.ceil(result_exp / 20000); // 星4経験値本：必要数
+    result_tables[0].rows[1].cells[1].firstChild.data = Math.ceil(result_exp /  5000); // 星3経験値本：必要数
+    result_tables[0].rows[1].cells[2].firstChild.data = Math.ceil(result_exp /  1000); // 星2経験値本：必要数
+    result_tables[0].rows[1].cells[3].firstChild.data = result_mor.toLocaleString('ja-JP'); // 必要モラ
+
+    // 必要素材カウント(0:特産, 1:魔物星1, 2:魔物星2, 3:魔物星3, 4:精鋭, 5:属性星2, 6:属性星3, 7:属性星4, 8:属性星5) * 現在値・目標値
+    let need_mat = [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]];
     for (let i = 0; i < 2; i++) {
       let tgt_lv = (i==0 ? org + brk_org : nxt + brk_nxt);
-      console.log(tgt_lv);
       if(tgt_lv > 20){
-        mat[0][i] += 3;
-        mat[1][i] += 3;
-        mat[5][i] += 1;
+        need_mat[0][i] += 3;
+        need_mat[1][i] += 3;
+        need_mat[5][i] += 1;
       }
       if(tgt_lv > 40){
-        mat[0][i] += 10;
-        mat[1][i] += 15;
-        mat[4][i] += 2;
-        mat[6][i] += 3;
+        need_mat[0][i] += 10;
+        need_mat[1][i] += 15;
+        need_mat[4][i] += 2;
+        need_mat[6][i] += 3;
       }
       if(tgt_lv > 50){
-        mat[0][i] += 20;
-        mat[2][i] += 12;
-        mat[4][i] += 4;
-        mat[6][i] += 6;
+        need_mat[0][i] += 20;
+        need_mat[2][i] += 12;
+        need_mat[4][i] += 4;
+        need_mat[6][i] += 6;
       }
       if(tgt_lv > 60){
-        mat[0][i] += 30;
-        mat[2][i] += 18;
-        mat[4][i] += 8;
-        mat[7][i] += 3;
+        need_mat[0][i] += 30;
+        need_mat[2][i] += 18;
+        need_mat[4][i] += 8;
+        need_mat[7][i] += 3;
       }
       if(tgt_lv > 70){
-        mat[0][i] += 45;
-        mat[3][i] += 12;
-        mat[4][i] += 12;
-        mat[7][i] += 6;
+        need_mat[0][i] += 45;
+        need_mat[3][i] += 12;
+        need_mat[4][i] += 12;
+        need_mat[7][i] += 6;
       }
       if(tgt_lv > 80){
-        mat[0][i] += 60;
-        mat[3][i] += 24;
-        mat[4][i] += 20;
-        mat[8][i] += 6;
+        need_mat[0][i] += 60;
+        need_mat[3][i] += 24;
+        need_mat[4][i] += 20;
+        need_mat[8][i] += 6;
       }
     }
     for (let i = 0; i < 4; i++) {
-      result_table2.rows[0].cells[i].firstChild.data = chara_mat[chara][i+2];
-      result_table2.rows[1].cells[i].firstChild.data = mat[i][1] - mat[i][0];
+      result_tables[1].rows[0].cells[i].firstChild.data = chara_info[chara][i+2];
+      result_tables[1].rows[1].cells[i].firstChild.data = need_mat[i][1] - need_mat[i][0];
     }
-    
     for (let i = 0; i < 5; i++) {
-      if(i==0 && chara_mat[chara][1]=="主")
-        result_table3.rows[1].cells[i].firstChild.data = 0;
+      if(i==0 && chara_info[chara][1]=="主")
+        result_tables[2].rows[1].cells[i].firstChild.data = 0;
       else
-        result_table3.rows[1].cells[i].firstChild.data = mat[i+4][1] - mat[i+4][0];
+        result_tables[2].rows[1].cells[i].firstChild.data = need_mat[i+4][1] - need_mat[i+4][0];
     }
   }else{
-    result_table.rows[1].cells[0].firstChild.data  = "エラー";
-    result_table.rows[1].cells[1].firstChild.data  = "エラー";
-    result_table.rows[1].cells[2].firstChild.data  = "エラー";
-    result_table.rows[1].cells[3].firstChild.data  = "エラー";
-    result_table2.rows[1].cells[0].firstChild.data = "エラー";
-    result_table2.rows[1].cells[1].firstChild.data = "エラー";
-    result_table2.rows[1].cells[2].firstChild.data = "エラー";
-    result_table2.rows[1].cells[3].firstChild.data = "エラー";
-    result_table3.rows[1].cells[0].firstChild.data = "エラー";
-    result_table3.rows[1].cells[1].firstChild.data = "エラー";
-    result_table3.rows[1].cells[2].firstChild.data = "エラー";
-    result_table3.rows[1].cells[3].firstChild.data = "エラー";
-    result_table3.rows[1].cells[4].firstChild.data = "エラー";
+    // エラーメッセージ表示
+    document.getElementById("result_message").innerHTML = "<div id=\"result_message\"class=\"alert alert-danger\" role=\"alert\">エラー：レベル入力が不正です</div>";
   }
 }

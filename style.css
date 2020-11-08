@@ -1,3 +1,9 @@
+div#main_container{
+  background-color:#ece5d8;
+}
+nav#headnav{
+  background-color:#485164;
+}
 body{
   background-color:#DDDDDD;
 }
